@@ -1,0 +1,499 @@
+/* ─── Tailwind Layers ──────────────────────────────────────────────────────── */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── CSS Custom Properties — Design Tokens ───────────────────────────────── */
+/*
+ * These CSS variables mirror the Tailwind token values so they can be used
+ * in plain CSS rules, inline styles, and gradient/shadow strings that
+ * cannot reference Tailwind classes directly.
+ */
+:root {
+  /* ── Surfaces (L1 → L5 elevation) ─────────────────────────────── */
+  --color-bg-primary:  #080B1A;   /* L1 — page background */
+  --color-bg-navy:     #0B1026;   /* L2 — structural / navbar */
+  --color-bg-sidebar:  #0D132D;   /* L3 — sidebar */
+  --color-bg-card:     #121936;   /* L4 — cards / panels */
+  --color-bg-elevated: #171F42;   /* L5 — modals / dropdowns */
+
+  /* ── Brand ─────────────────────────────────────────────────────── */
+  --color-primary:        #4F46E5;  /* indigo — primary action */
+  --color-primary-bright: #6366F1;  /* lighter indigo — text accents */
+  --color-violet:         #7C3AED;  /* secondary accent */
+  --color-violet-light:   #A78BFA;  /* violet for text on dark bg */
+
+  /* ── Auction accent ─────────────────────────────────────────────── */
+  --color-auction:       #F59E0B;   /* amber — bid values, money */
+  --color-auction-light: #FCD34D;
+
+  /* ── Soft blue (use sparingly) ──────────────────────────────────── */
+  --color-soft-blue: #60A5FA;
+
+  /* ── Text hierarchy ─────────────────────────────────────────────── */
+  --color-text-primary:   #F8FAFC;  /* main text */
+  --color-text-secondary: #CBD5E1;  /* supporting text */
+  --color-text-muted:     #94A3B8;  /* placeholder, captions */
+
+  /* ── Borders ────────────────────────────────────────────────────── */
+  --color-border:               #1F2D4A;
+  --color-border-subtle:        #141D38;
+  --color-border-active:        #4F46E5;
+  --color-border-subtle-rgba:   rgba(148, 163, 184, 0.12);
+  --color-border-active-rgba:   rgba(99,  102, 241, 0.45);
+
+  /* ── Status ─────────────────────────────────────────────────────── */
+  --color-success: #22C55E;
+  --color-danger:  #F43F5E;
+  --color-warning: #F59E0B;
+}
+
+/* ─── Base Layer ───────────────────────────────────────────────────────────── */
+@layer base {
+
+  /* ── Box model reset ─────────────────────────────────────────────────────── */
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    tab-size: 4;
+    /* Ensure the deepest surface shows through if any gap exists */
+    background-color: #080B1A;
+  }
+
+  /* ── Body — Midnight Navy (L1) ──────────────────────────────────────────── */
+  body {
+    background-color: #080B1A;                            /* background.primary */
+    color:            #F8FAFC;                            /* text.primary */
+    font-family:      'Inter', ui-sans-serif, system-ui, sans-serif;
+    font-size:        1rem;
+    line-height:      1.6;
+    -webkit-font-smoothing:  antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Prevent horizontal overflow from un-anchored children */
+    overflow-x: hidden;
+  }
+
+  /* ── Selection — indigo ─────────────────────────────────────────────────── */
+  ::selection {
+    background-color: #4F46E5;   /* primary.DEFAULT */
+    color:            #F8FAFC;
+  }
+
+  ::-moz-selection {
+    background-color: #4F46E5;
+    color:            #F8FAFC;
+  }
+
+  /* ── Reduced Motion ─────────────────────────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration:        0.01ms !important;
+      animation-iteration-count: 1      !important;
+      transition-duration:       0.01ms !important;
+    }
+  }
+
+  /* ── Scrollbar — Midnight Navy palette ──────────────────────────────────── */
+  ::-webkit-scrollbar              { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track        { background: #0B1026; }          /* bg-navy */
+  ::-webkit-scrollbar-thumb        {
+    background-color: #1F2D4A;    /* border.DEFAULT */
+    border-radius:    9999px;
+    border:           2px solid #0B1026;
+  }
+  ::-webkit-scrollbar-thumb:hover  { background-color: #2D3F5E; }
+  ::-webkit-scrollbar-corner       { background: #0B1026; }
+
+  /* Firefox */
+  * { scrollbar-width: thin; scrollbar-color: #1F2D4A #0B1026; }
+
+  /* ── Heading defaults ────────────────────────────────────────────────────── */
+  /*
+   * Heading font sizes come from Tailwind utilities per-component.
+   * These base rules ensure color and spacing are never left at browser default.
+   */
+  h1, h2, h3, h4, h5, h6 {
+    font-family:     'Inter', ui-sans-serif, system-ui, sans-serif;
+    font-weight:     700;
+    line-height:     1.25;
+    color:           #F8FAFC;   /* text.primary */
+    letter-spacing:  -0.015em;
+  }
+
+  /* ── Anchor defaults ────────────────────────────────────────────────────── */
+  a {
+    color:           #6366F1;   /* primary.bright — readable indigo on dark */
+    text-decoration: none;
+    transition:      color 150ms ease, text-decoration-color 150ms ease;
+  }
+
+  a:hover {
+    color:           #A78BFA;   /* violet.light — subtle shift on hover */
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  a:focus-visible {
+    outline:        2px solid #4F46E5;   /* primary.DEFAULT */
+    outline-offset: 3px;
+    border-radius:  3px;
+  }
+
+  /* ── Paragraph defaults ─────────────────────────────────────────────────── */
+  p {
+    /* Let components override; default just ensures dark-theme color */
+    color: inherit;
+  }
+
+  /* ── Code / Pre ─────────────────────────────────────────────────────────── */
+  code, kbd, samp {
+    font-family:  ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, monospace;
+    font-size:    0.875em;
+    background:   #171F42;               /* background.elevated */
+    color:        #A78BFA;               /* violet.light — distinguishes inline code */
+    padding:      0.125em 0.35em;
+    border-radius: 0.25rem;
+    border:       1px solid #1F2D4A;
+  }
+
+  pre {
+    font-family:  ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, monospace;
+    font-size:    0.875rem;
+    background:   #0B1026;               /* background.navy */
+    color:        #CBD5E1;               /* text.secondary */
+    border:       1px solid #1F2D4A;
+    border-radius: 0.5rem;
+    padding:      1rem 1.25rem;
+    overflow-x:   auto;
+    line-height:  1.6;
+  }
+
+  pre code {
+    /* Reset the inline code styles inside a pre block */
+    background:    transparent;
+    color:         inherit;
+    padding:       0;
+    border:        none;
+    font-size:     inherit;
+    border-radius: 0;
+  }
+
+  /* ── Lists ──────────────────────────────────────────────────────────────── */
+  ul, ol {
+    /* Reset browser defaults; components add padding/bullets as needed */
+    list-style: none;
+    padding:    0;
+    margin:     0;
+  }
+
+  /* ── Form element inheritance ────────────────────────────────────────────── */
+  /*
+   * These only cover inheritance and color defaults.
+   * Component-level styling (borders, padding, focus rings) stays in components.
+   */
+  input, textarea, select, button {
+    font-family: inherit;
+    font-size:   inherit;
+    line-height: inherit;
+    color:       inherit;
+  }
+
+  /* Placeholder text — muted, never invisible */
+  input::placeholder,
+  textarea::placeholder {
+    color:   #94A3B8;   /* text.muted */
+    opacity: 1;         /* Firefox reduces opacity by default; override */
+  }
+
+  /* ── Input / Textarea / Select base appearance ──────────────────────────── */
+  /*
+   * Dark background for every form control so browser-autofill doesn't
+   * flash white. Component-level classes (border, ring, padding) take over
+   * from here.
+   */
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
+  textarea,
+  select {
+    background-color: #121936;   /* background.card — L4 surface */
+    color:            #F8FAFC;   /* text.primary */
+    border-color:     #1F2D4A;   /* border.DEFAULT */
+    /* Remove browser vendor styling */
+    -webkit-appearance: none;
+    -moz-appearance:    none;
+    appearance:         none;
+  }
+
+  /* Focus ring on bare form elements — overridden by Tailwind outline-none */
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline:        2px solid #4F46E5;   /* primary.DEFAULT */
+    outline-offset: 2px;
+  }
+
+  /* Checkbox & radio — minimal dark styling */
+  input[type="checkbox"],
+  input[type="radio"] {
+    accent-color:     #4F46E5;   /* primary.DEFAULT — checked state fills indigo */
+    background-color: #121936;
+    border-color:     #1F2D4A;
+    cursor:           pointer;
+  }
+
+  /* File input */
+  input[type="file"] {
+    color:  #CBD5E1;   /* text.secondary */
+    cursor: pointer;
+  }
+
+  input[type="file"]::file-selector-button {
+    background:    #171F42;   /* background.elevated */
+    color:         #CBD5E1;
+    border:        1px solid #1F2D4A;
+    border-radius: 0.375rem;
+    padding:       0.25rem 0.75rem;
+    font-size:     0.875rem;
+    font-family:   inherit;
+    cursor:        pointer;
+    margin-right:  0.75rem;
+    transition:    background-color 150ms ease, border-color 150ms ease;
+  }
+
+  input[type="file"]::file-selector-button:hover {
+    background:  #1F2D4A;
+    border-color: #4F46E5;
+  }
+
+  /* Browser autofill override — prevent white flash on dark backgrounds */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill,
+  select:-webkit-autofill {
+    -webkit-box-shadow:      0 0 0 1000px #121936 inset !important;
+    -webkit-text-fill-color: #F8FAFC !important;
+    caret-color:             #F8FAFC;
+    border-color:            #1F2D4A !important;
+  }
+
+  /* ── Button base ────────────────────────────────────────────────────────── */
+  button {
+    cursor:      pointer;
+    font-family: inherit;
+    transition:
+      background-color 150ms ease,
+      color            150ms ease,
+      border-color     150ms ease,
+      box-shadow       150ms ease,
+      opacity          150ms ease,
+      transform        100ms ease;
+  }
+
+  button:focus-visible {
+    outline:        2px solid #4F46E5;   /* primary.DEFAULT */
+    outline-offset: 2px;
+  }
+
+  button:disabled {
+    cursor:  not-allowed;
+    opacity: 0.5;
+  }
+
+  /* ── Image / Media defaults ─────────────────────────────────────────────── */
+  img, video, canvas {
+    display:   block;
+    max-width: 100%;
+    height:    auto;
+  }
+
+  svg {
+    /* SVGs inside flex containers should not force extra height */
+    display: block;
+  }
+
+  /* ── Table defaults ─────────────────────────────────────────────────────── */
+  /*
+   * Only covers basic spacing/border reset.
+   * Full table styling (header bg, row hover, column widths) stays in components.
+   */
+  table {
+    border-collapse: collapse;
+    width:           100%;
+  }
+
+  th {
+    text-align:  left;
+    font-weight: 600;
+    color:       #94A3B8;   /* text.muted — thead labels are subdued */
+  }
+
+  td, th {
+    vertical-align: middle;
+  }
+
+  /* ── Horizontal rule ────────────────────────────────────────────────────── */
+  hr {
+    border:     none;
+    border-top: 1px solid #1F2D4A;   /* border.DEFAULT */
+    margin:     1.5rem 0;
+  }
+
+  /* ── Blockquote ─────────────────────────────────────────────────────────── */
+  blockquote {
+    border-left: 3px solid #4F46E5;   /* primary.DEFAULT */
+    padding-left: 1rem;
+    color:        #CBD5E1;             /* text.secondary */
+    font-style:   italic;
+  }
+
+  /* ── Strong / Em ────────────────────────────────────────────────────────── */
+  strong, b {
+    font-weight: 700;
+    color:       #F8FAFC;   /* text.primary — emphasised text stays bright */
+  }
+
+  /* ── Mark / Highlight ───────────────────────────────────────────────────── */
+  mark {
+    background: rgba(245, 158, 11, 0.2);   /* auction amber tint */
+    color:      #FCD34D;                    /* auction.light */
+    border-radius: 2px;
+    padding: 0 0.2em;
+  }
+
+}
+
+/* ─── Shimmer skeleton — dark surfaces ────────────────────────────────────── */
+.shimmer-bg {
+  background: linear-gradient(
+    90deg,
+    #121936 25%,    /* background.card */
+    #171F42 50%,    /* background.elevated */
+    #121936 75%
+  );
+  background-size: 200% 100%;
+}
+
+/* ─── Scrollbar hide utility ─────────────────────────────────────────────── */
+/* Use on elements that need scrolling but should hide the scrollbar track */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width:    none;
+}
+.scrollbar-none::-webkit-scrollbar { display: none; }
+
+/* ─── rgba border utilities ──────────────────────────────────────────────── */
+/*
+ * Expose exact rgba border values that Tailwind's color token system
+ * cannot express as opacity-shorthand classes.
+ */
+.border-subtle-rgba  { border-color: rgba(148, 163, 184, 0.12); }
+.border-active-rgba  { border-color: rgba(99,  102, 241, 0.45); }
+
+/* ─── Surface depth helpers ──────────────────────────────────────────────── */
+/*
+ * Convenience bg classes for the five elevation levels using CSS variables.
+ * Prefer Tailwind bg-bg-* token classes over these; use here when a CSS
+ * file (e.g. third-party widget override) needs the value directly.
+ */
+.surface-l1 { background-color: var(--color-bg-primary);  }
+.surface-l2 { background-color: var(--color-bg-navy);     }
+.surface-l3 { background-color: var(--color-bg-sidebar);  }
+.surface-l4 { background-color: var(--color-bg-card);     }
+.surface-l5 { background-color: var(--color-bg-elevated); }
+
+/* ─── Responsive utility helpers ─────────────────────────────────────────── */
+/*
+ * Global helpers for mobile/tablet/desktop responsive behaviour.
+ * These supplement Tailwind breakpoint classes where plain CSS is cleaner.
+ */
+
+/* Prevent content wider than viewport from creating horizontal scroll */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Safe-area padding for notched devices (iOS, Android) */
+.safe-top    { padding-top:    env(safe-area-inset-top,    0px); }
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
+.safe-left   { padding-left:   env(safe-area-inset-left,   0px); }
+.safe-right  { padding-right:  env(safe-area-inset-right,  0px); }
+
+/* Touch-friendly tap targets — minimum 44×44px as recommended by WCAG */
+.tap-target {
+  min-height: 44px;
+  min-width:  44px;
+}
+
+/* Smooth momentum scrolling on iOS for scrollable containers */
+.scroll-touch {
+  -webkit-overflow-scrolling: touch;
+  overflow-y: auto;
+}
+
+/* Horizontal scroll container — no visible scrollbar, touch-friendly */
+.scroll-x-touch {
+  overflow-x:                 auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width:            none;
+  -ms-overflow-style:         none;
+}
+.scroll-x-touch::-webkit-scrollbar { display: none; }
+
+/* Prevent text from overflowing its container on small screens */
+.break-anywhere {
+  overflow-wrap: anywhere;
+  word-break:    break-word;
+}
+
+/* Fluid typography — scales between two sizes using clamp */
+/* Usage: apply .text-fluid-sm / .text-fluid-base / .text-fluid-lg */
+.text-fluid-sm   { font-size: clamp(0.75rem,  2vw, 0.875rem); }
+.text-fluid-base { font-size: clamp(0.875rem, 2.5vw, 1rem);   }
+.text-fluid-lg   { font-size: clamp(1rem,     3vw,  1.25rem); }
+.text-fluid-xl   { font-size: clamp(1.25rem,  4vw,  1.5rem);  }
+.text-fluid-2xl  { font-size: clamp(1.5rem,   5vw,  2rem);    }
+.text-fluid-3xl  { font-size: clamp(1.875rem, 5vw,  2.25rem); }
+
+/* Full-bleed on mobile — removes horizontal padding inside narrow containers */
+@media (max-width: 639px) {
+  .mobile-bleed {
+    margin-left:  -1rem;
+    margin-right: -1rem;
+    border-radius: 0;
+  }
+  /* Tables: allow horizontal scroll rather than break layout */
+  .table-responsive {
+    overflow-x:                 auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  /* Cards inside a grid: full width on very small screens */
+  .card-full-mobile {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Tablet-only tweaks (640px – 1023px) */
+@media (min-width: 640px) and (max-width: 1023px) {
+  /* Two-column grids that are 4-col on desktop → 2-col on tablet */
+  .grid-tablet-2 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* Stack flex rows on mobile */
+@media (max-width: 639px) {
+  .stack-mobile {
+    flex-direction: column !important;
+    align-items:    stretch !important;
+  }
+  .stack-mobile > * {
+    width: 100% !important;
+  }
+}
